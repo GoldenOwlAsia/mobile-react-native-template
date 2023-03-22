@@ -1,20 +1,22 @@
 <div align="center">
-    <img src="resources/tom-github-banner.png" alt="Logo" width="100%">
+    <img src="resources/github-banner.png" alt="Logo" width="100%">
 </div>
 
 # React Native boilerplate
 
 This project is a [React Native](https://facebook.github.io/react-native/) boilerplate that can be used to kickstart a mobile application. Fork from [TheCodingMachine](https://thecodingmachine.github.io/react-native-boilerplate/docs/Introduction/)
 
-## Requirements
+## Requirements 💾
 
 - Node 14 or greater is required. Development for iOS requires a Mac and Xcode 10 or up, and will target iOS 11 and up.
 
 - You also need to install the dependencies required by React Native.  
-Go to the [React Native environment setup](https://reactnative.dev/docs/environment-setup), then select `React Native CLI Quickstart` tab.  
+    - [for Android development](https://reactnative.dev/docs/getting-started.html#installing-dependencies-3)
+    - [for iOS development](https://reactnative.dev/docs/getting-started.html#installing-dependencies)
+- Go to the [React Native environment setup](https://reactnative.dev/docs/environment-setup), then select `React Native CLI Quickstart` tab.  
 Follow instructions for your given `development OS` and `target OS`.
 
-## Quick start
+## Quick start 💿
 
 To create a new project using the boilerplate simply run :
 
@@ -26,6 +28,37 @@ Assuming you have all the requirements installed, you can run the project by run
 
 - `yarn start` to start the metro bundler, in a dedicated terminal
 - `yarn <platform>` to run the *platform* application (remember to start a simulator or connect a device)
+
+## Configuration 🗃️
+
+### Change the appicon
+To help generate appicons, you can use an online tool like appicon or easyappicon to generate for both iOS and Android all icons and image sets.
+
+### 1. iOS 🍎
+To change the appicon of the iOS application, you need to replace all the content of
+```
+src > ios > *name_of_your_app* > Images.xcassets > AppIcon.appiconset
+```
+with your appicons generated with appicon for example.
+
+### 2. Android 🤖
+To change the appicon of the Android application, you need to replace all the content of
+```
+src > android > app > src > res
+```
+with your appicons generated with appicon for example.
+
+### Change the splash screen icon
+### 1. iOS 🍎
+You can use the same tool (appicon) to generate image sets (@1x, @2x, @3x). Then you just have to replace : Splash_icon@1x.png, Splash_icon@2x.png, Splash_icon@3x.png with yours in :
+```
+src > ios > *name_of_your_app* > Images.xcassets > SplashIcon.imageset
+```
+### 2. Android 🤖
+You just have to replace the splash_icon.png located at :
+```
+src > android > app > src > res > drawable
+```
 
 ## Content 🧳
 The boilerplate contains a clear directory layout to provide a base architecture for your application with some essential dependencies:
@@ -52,6 +85,18 @@ The boilerplate includes an example (displaying fake user data) from UI componen
 - `src/theme`: base styles for the application
 - `src/translations`: application strings, you can add languages files and be able to translate your app strings
 
-## Digging Deeper
+## Features 🍌
+* [x] Localization
+* [x] Theme
+* [x] Navigation Stack
+* [x] State Management - Redux
+* [x] Login Flow
+    * [x] Login Flow - UI
+    * [ ] Login/Signup With Email
+    * [ ] Login With Google
+    * [ ] Login With Facebook
+    * [ ] Login With Apple
 
-To learn more about this boilerplate, go to [TheCodingMachine documentation](https://thecodingmachine.github.io/react-native-boilerplate)
+## Digging Deeper 🚀
+
+To learn more about this boilerplate, go to [Wiki](https://github.com/GoldenOwlAsia/mobile-react-native-template/wiki)
