@@ -4,7 +4,7 @@
 
 # React Native boilerplate
 
-This project is a [React Native](https://facebook.github.io/react-native/) boilerplate that can be used to kickstart a mobile application. Fork from [TheCodingMachine](https://thecodingmachine.github.io/react-native-boilerplate/docs/Introduction/)
+This project is a [React Native](https://facebook.github.io/react-native/) boilerplate that can be used to kickstart a mobile application. 
 
 ## Requirements 💾
 
