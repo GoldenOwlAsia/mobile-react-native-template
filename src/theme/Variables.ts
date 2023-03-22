@@ -13,6 +13,8 @@ import { ThemeNavigationColors } from '../../@types/theme';
 export const Colors = {
   transparent: 'rgba(0,0,0,0)',
   inputBackground: '#FFFFFF',
+  inputBorder: '#DDDDDD',
+  inputText: '#000',
   white: '#ffffff',
   //Typography
   textGray800: '#000000',

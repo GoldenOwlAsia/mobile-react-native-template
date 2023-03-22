@@ -21,27 +21,13 @@ export default function <C>({ Colors, Gutters, Layout }: CommonParams<C>) {
     color: Colors.circleButtonColor,
     fill: Colors.circleButtonColor,
   };
-  const text = {
-    ...Gutters.regularVPadding,
-    backgroundColor: Colors.transparent,
-  };
 
   return StyleSheet.create({
     base,
     rounded,
     circle,
-    text,
-    outline: {
+    iconButton: {
       ...base,
-      backgroundColor: Colors.transparent,
-      borderWidth: 2,
-      borderColor: Colors.primary,
-    },
-    outlineRounded: {
-      ...rounded,
-      backgroundColor: Colors.transparent,
-      borderWidth: 2,
-      borderColor: Colors.primary,
     },
   });
 }

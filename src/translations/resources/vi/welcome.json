@@ -1,0 +1,5 @@
+{
+  "title": "Chào mừng",
+  "subtitle": "$t(common:appName.full)",
+  "description": "Bạn có muốn khám phá các tính năng khác? Chỉ cần nhấp vào một trong ba nút ở cuối màn hình. Cái đầu tiên cho phép bạn xem demo Login flow. Cái thứ hai cho phép bạn thay đổi màu Theme. Và thứ ba cho phép bạn thay đổi ngôn ngữ."
+}

@@ -1,9 +1,11 @@
 import common from './common.json';
-import example from './example.json';
+import home from './home.json';
+import sign from './sign.json';
 import welcome from './welcome.json';
 
 export default {
   common,
-  example,
+  home,
+  sign,
   welcome,
 };
