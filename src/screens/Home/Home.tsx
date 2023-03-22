@@ -1,23 +1,16 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect } from 'react';
-import {
-  View,
-  ActivityIndicator,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  Alert,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Brand } from '../../components';
 import { useTheme } from '../../hooks';
-import { useLazyFetchOneQuery } from '../../services/modules/users';
 import { changeTheme, ThemeState } from '../../store/theme';
 import i18next from 'i18next';
+import { ApplicationScreenProps } from '../../../@types/navigation';
 
-const Example = () => {
-  const { t } = useTranslation(['example', 'welcome']);
+const Home = ({ navigation }: ApplicationScreenProps) => {
+  const { t } = useTranslation(['home', 'welcome']);
   const {
     Common,
     Fonts,
@@ -28,20 +21,13 @@ const Example = () => {
   } = useTheme();
   const dispatch = useDispatch();
 
-  const [fetchOne, { data, isSuccess, isLoading, isFetching }] =
-    useLazyFetchOneQuery();
-
-  useEffect(() => {
-    if (isSuccess && data?.name) {
-      Alert.alert(t('example:helloUser', { name: data.name }));
-    }
-  }, [isSuccess, data]);
+  useEffect(() => {}, []);
 
   const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
     dispatch(changeTheme({ theme, darkMode }));
   };
 
-  const onChangeLanguage = (lang: 'fr' | 'en') => {
+  const onChangeLanguage = (lang: 'vi' | 'en') => {
     i18next.changeLanguage(lang);
   };
 
@@ -75,17 +61,6 @@ const Example = () => {
             },
           ]}
         />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              bottom: '-30%',
-              left: 0,
-            },
-          ]}
-          source={Images.sparkles.bottomLeft}
-          resizeMode={'contain'}
-        />
         <View
           style={[
             Layout.absolute,
@@ -98,74 +73,6 @@ const Example = () => {
         >
           <Brand height={300} width={300} />
         </View>
-        <Image
-          style={[
-            Layout.absolute,
-            Layout.fill,
-            {
-              top: 0,
-              left: 0,
-            },
-          ]}
-          source={Images.sparkles.topLeft}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '-5%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.top}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '15%',
-              right: 20,
-            },
-          ]}
-          source={Images.sparkles.topRight}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              bottom: '-10%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.right}
-          resizeMode={'contain'}
-        />
-
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '75%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.bottom}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '60%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.bottomRight}
-          resizeMode={'contain'}
-        />
       </View>
       <View
         style={[
@@ -198,16 +105,16 @@ const Example = () => {
         >
           <TouchableOpacity
             style={[Common.button.circle, Gutters.regularBMargin]}
-            onPress={() => fetchOne(`${Math.ceil(Math.random() * 10 + 1)}`)}
+            onPress={() =>
+              navigation.navigate('Sign', {
+                screen: 'Signin',
+              })
+            }
           >
-            {isFetching || isLoading ? (
-              <ActivityIndicator />
-            ) : (
-              <Image
-                source={Images.icons.send}
-                style={{ tintColor: isDark ? '#A6A4F0' : '#44427D' }}
-              />
-            )}
+            <Image
+              source={Images.icons.account}
+              style={{ tintColor: isDark ? '#A6A4F0' : '#44427D' }}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -223,7 +130,7 @@ const Example = () => {
           <TouchableOpacity
             style={[Common.button.circle, Gutters.regularBMargin]}
             onPress={() =>
-              onChangeLanguage(i18next.language === 'fr' ? 'en' : 'fr')
+              onChangeLanguage(i18next.language === 'vi' ? 'en' : 'vi')
             }
           >
             <Image
@@ -237,4 +144,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default Home;

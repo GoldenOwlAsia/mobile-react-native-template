@@ -8,6 +8,7 @@ import {
 import { Startup } from '../screens';
 import { useTheme } from '../hooks';
 import MainNavigator from './Main';
+import SignNavigator from './Sign';
 import { useFlipper } from '@react-navigation/devtools';
 import { ApplicationStackParamList } from '../../@types/navigation';
 
@@ -29,6 +30,7 @@ const ApplicationNavigator = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Startup" component={Startup} />
           <Stack.Screen name="Main" component={MainNavigator} />
+          <Stack.Screen name="Sign" component={SignNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

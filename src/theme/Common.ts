@@ -5,6 +5,7 @@
  */
 import { StyleSheet } from 'react-native';
 import buttonStyles from './components/Buttons';
+import inputStyles from './components/Inputs';
 import { CommonParams } from '../../@types/theme';
 
 export default function <C>({ Colors, ...args }: CommonParams<C>) {
@@ -23,6 +24,14 @@ export default function <C>({ Colors, ...args }: CommonParams<C>) {
         height: 45,
         borderRadius: 10,
         paddingStart: 20,
+      },
+    }),
+    input: inputStyles({ Colors, ...args }),
+    ...StyleSheet.create({
+      textInput: {
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginTop: 8,
       },
     }),
   };

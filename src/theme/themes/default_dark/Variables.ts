@@ -5,7 +5,7 @@ export const Colors = {
   textGray800: '#E0E0E0',
   textGray400: '#969696',
   textGray200: '#BABABA',
-  inputBackground: '#3a3a3a',
+  inputBackground: '#FFFFFF',
   circleButtonBackground: '#252732',
 };
 
