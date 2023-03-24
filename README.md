@@ -90,12 +90,17 @@ The boilerplate includes an example (displaying fake user data) from UI componen
 * [x] Theme
 * [x] Navigation Stack
 * [x] State Management - Redux
+* [ ] Create more common component (Example TextInput, Button ... )
 * [x] Login Flow
     * [x] Login Flow - UI
-    * [ ] Login/Signup With Email
-    * [ ] Login With Google
-    * [ ] Login With Facebook
-    * [ ] Login With Apple
+    * [ ] Intergation Mock API, Repositories and redux model
+        * [ ] Login/Signup With Email
+        * [ ] Login With Google
+        * [ ] Login With Facebook (Optional)
+        * [ ] Login With Apple
+    * [x] User state management
+        * [ ] Create dashboard screen with bottom navigation bar
+        * [ ] Profile screen - show login/no-login state
 
 ## Digging Deeper 🚀
 
