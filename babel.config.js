@@ -1,19 +1,23 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
+  presets: ['module:@react-native/babel-preset'],
   plugins: [
     [
       'module-resolver',
       {
         root: ['./src'],
-        extensions: ['.js', '.json'],
+        extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
         alias: {
           '@': './src',
-          types: './@types',
+          // '@/components': './src/components',
+          // '@/hooks': './src/hooks',
+          // '@/navigators': './src/navigators',
+          // '@/screens': './src/screens',
+          // '@/services': './src/services',
+          // '@/stores': './src/stores',
+          // '@/theme': './src/theme',
+          // '@/translations': './src/translations',
         },
       },
     ],
-    'inline-dotenv',
-    'react-native-reanimated/plugin', // needs to be last
   ],
 };
