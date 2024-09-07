@@ -8,16 +8,15 @@ module.exports = {
         extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
         alias: {
           '@': './src',
-          // '@/components': './src/components',
-          // '@/hooks': './src/hooks',
-          // '@/navigators': './src/navigators',
-          // '@/screens': './src/screens',
-          // '@/services': './src/services',
-          // '@/stores': './src/stores',
-          // '@/theme': './src/theme',
-          // '@/translations': './src/translations',
         },
       },
+      [
+        'module:react-native-dotenv',
+        {
+          moduleName: '@env',
+          path: '.env',
+        },
+      ],
     ],
   ],
 };
