@@ -10,13 +10,13 @@ module.exports = {
           '@': './src',
         },
       },
-      [
-        'module:react-native-dotenv',
-        {
-          moduleName: '@env',
-          path: '.env',
-        },
-      ],
+    ],
+    [
+      'module:react-native-dotenv',
+      {
+        moduleName: '@env',
+        path: '.env',
+      },
     ],
   ],
 };

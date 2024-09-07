@@ -7,6 +7,7 @@ import ApplicationNavigator from '@/navigators/Application';
 import { persistor, store } from '@/stores';
 
 import './gesture-handler';
+import './src/translations';
 
 function App(): React.JSX.Element {
   return (
