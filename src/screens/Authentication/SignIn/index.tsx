@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 
 import { Button, SafeAreaView, Text, TextInput } from '@/components';
 import { colors, fontSize, spacing } from '@/theme';
-import { ApplicationStackParamList } from '@/types/navigation';
+import { useDispatch } from '@/hooks';
+import { login } from '@/stores/user/reducer';
 
 const SignIn = () => {
-  const navigation =
-    useNavigation<StackNavigationProp<ApplicationStackParamList>>();
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const onSubmit = () => {
-    navigation.navigate('Home');
+    dispatch(login(email));
   };
 
   return (
@@ -21,9 +21,18 @@ const SignIn = () => {
         <Text style={styles.title}>Sign In</Text>
         <View>
           <Text style={styles.subtitle}>Email</Text>
-          <TextInput style={styles.emailInput} />
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            style={styles.emailInput}
+          />
           <Text style={styles.subtitle}>Password</Text>
-          <TextInput />
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
         </View>
         <Button text="Submit" style={styles.button} onPress={onSubmit} />
       </View>
