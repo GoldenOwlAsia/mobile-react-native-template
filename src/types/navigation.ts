@@ -4,7 +4,3 @@ export type ApplicationStackParamList = {
   // Authentication
   SignIn: undefined;
 };
-
-export type AuthenticationStackParamList = {
-  SignIn: undefined;
-};

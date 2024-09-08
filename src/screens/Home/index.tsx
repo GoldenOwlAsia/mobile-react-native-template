@@ -20,7 +20,9 @@ const Home = () => {
   };
 
   const onChangeLanguage = (lang: 'vi' | 'en') => {
-    i18next.changeLanguage(lang);
+    i18next.changeLanguage(lang).catch(() => {
+      // Handle error here
+    });
   };
 
   return (

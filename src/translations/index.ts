@@ -14,19 +14,24 @@ const ns = Object.keys(en) as TupleUnion<keyof typeof en>;
 
 export const defaultNS = ns[0];
 
-i18n.use(initReactI18next).init({
-  ns,
-  defaultNS,
-  resources: {
-    en,
-    vi,
-  },
-  lng: 'en',
-  fallbackLng: 'en',
-  interpolation: {
-    escapeValue: false, // not needed for react as it escapes by default
-  },
-  compatibilityJSON: 'v3',
-});
+i18n
+  .use(initReactI18next)
+  .init({
+    ns,
+    defaultNS,
+    resources: {
+      en,
+      vi,
+    },
+    lng: 'en',
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false, // not needed for react as it escapes by default
+    },
+    compatibilityJSON: 'v3',
+  })
+  .catch(() => {
+    // Handle error here
+  });
 
 export default i18n;
