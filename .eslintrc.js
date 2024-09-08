@@ -81,5 +81,6 @@ module.exports = {
     ],
     '@typescript-eslint/no-shadow': 'off',
     'no-param-reassign': 'off',
+    '@typescript-eslint/no-unsafe-call': 'error',
   },
 };

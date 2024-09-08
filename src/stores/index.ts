@@ -17,7 +17,7 @@ import { api } from '@/services/api';
 
 import userReducer from './user/reducer';
 
-const reducers = combineReducers({
+export const reducers = combineReducers({
   user: userReducer,
   [api.reducerPath]: api.reducer,
 });
@@ -25,6 +25,7 @@ const reducers = combineReducers({
 const storage = new MMKV();
 export const reduxStorage: Storage = {
   setItem: (key, value) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     storage.set(key, value);
     return Promise.resolve(true);
   },
@@ -42,6 +43,7 @@ const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist: ['user', 'auth'],
+  timeout: 0,
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

@@ -17,10 +17,21 @@ type Props = TouchableOpacityProps & {
   style?: ViewStyle;
 };
 
-const Button = ({ text, textStyle, style, ...props }: Props) => {
+const Button = ({
+  text,
+  textStyle,
+  style,
+  testID = 'button-view',
+  ...props
+}: Props) => {
   return (
-    <TouchableOpacity {...props} style={[styles.container, style]}>
-      <Text style={[styles.text, textStyle]}>{text}</Text>
+    <TouchableOpacity
+      {...props}
+      testID={testID}
+      style={[styles.container, style]}>
+      <Text testID="button-text" style={[styles.text, textStyle]}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };

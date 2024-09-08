@@ -5,9 +5,9 @@ import { colors, text } from '@/theme';
 
 type Props = TextProps;
 
-const CustomText = ({ style, ...props }: Props) => {
+const CustomText = ({ style, testID = 'text', ...props }: Props) => {
   return (
-    <Text {...props} style={[styles.text, style]}>
+    <Text {...props} testID={testID} style={[styles.text, style]}>
       {props.children}
     </Text>
   );
