@@ -1,39 +1,30 @@
-import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  NavigationContainer,
-  useNavigationContainerRef,
-} from '@react-navigation/native';
-import { Startup } from '../screens';
-import { useTheme } from '../hooks';
-import MainNavigator from './Main';
-import SignNavigator from './Sign';
-import { useFlipper } from '@react-navigation/devtools';
-import { ApplicationStackParamList } from '../../@types/navigation';
+import { NavigationContainer } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+
+import type { ApplicationStackParamList } from '@/types/navigation';
+import { Home, SignIn } from '@/screens';
+import { isLoggedInSelector } from '@/stores/user/selector';
 
 const Stack = createStackNavigator<ApplicationStackParamList>();
 
-// @refresh reset
 const ApplicationNavigator = () => {
-  const { Layout, darkMode, NavigationTheme } = useTheme();
-  const { colors } = NavigationTheme;
-
-  const navigationRef = useNavigationContainerRef();
-
-  useFlipper(navigationRef);
+  const isLoggedIn = useSelector(isLoggedInSelector);
 
   return (
-    <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
-      <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
-        <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Startup" component={Startup} />
-          <Stack.Screen name="Main" component={MainNavigator} />
-          <Stack.Screen name="Sign" component={SignNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoggedIn ? (
+          <Stack.Group>
+            <Stack.Screen name="Home" component={Home} />
+          </Stack.Group>
+        ) : (
+          <Stack.Group>
+            <Stack.Screen name="SignIn" component={SignIn} />
+          </Stack.Group>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

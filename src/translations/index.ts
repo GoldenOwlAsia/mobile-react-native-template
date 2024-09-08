@@ -1,28 +1,37 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import * as resources from './resources';
 
-const ns = Object.keys(Object.values(resources)[0]);
+import * as en from './resources/en';
+import * as vi from './resources/vi';
+
+type TupleUnion<U extends string, R extends unknown[] = []> = {
+  [S in U]: Exclude<U, S> extends never
+    ? [...R, S]
+    : TupleUnion<Exclude<U, S>, [...R, S]>;
+}[U];
+
+const ns = Object.keys(en) as TupleUnion<keyof typeof en>;
+
 export const defaultNS = ns[0];
 
-i18n.use(initReactI18next).init({
-  ns,
-  defaultNS,
-  resources: {
-    ...Object.entries(resources).reduce(
-      (acc, [key, value]) => ({
-        ...acc,
-        [key]: value,
-      }),
-      {},
-    ),
-  },
-  lng: 'en',
-  fallbackLng: 'en',
-  interpolation: {
-    escapeValue: false, // not needed for react as it escapes by default
-  },
-  compatibilityJSON: 'v3',
-});
+i18n
+  .use(initReactI18next)
+  .init({
+    ns,
+    defaultNS,
+    resources: {
+      en,
+      vi,
+    },
+    lng: 'en',
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false, // not needed for react as it escapes by default
+    },
+    compatibilityJSON: 'v3',
+  })
+  .catch(() => {
+    // Handle error here
+  });
 
 export default i18n;
