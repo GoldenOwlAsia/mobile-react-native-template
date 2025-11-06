@@ -65,16 +65,25 @@ function renameAndroidPackageDir(oldId, newId) {
 
   // Step 1: Setup app name, bundle id, package name
   const inquirer = (await import('inquirer')).default;
-  const { appName } = await inquirer.prompt([
+  const { appName, organization } = await inquirer.prompt([
     {
       name: 'appName',
       message: 'App name (JS):',
       default: 'myapp',
     },
+    {
+      name: 'organization',
+      message: "Organization's name (optional):",
+      default: '',
+    },
   ]);
+
   const safeAppName = appName.toLowerCase().replace(/\s+/g, '');
-  const namespace = `com.${safeAppName}`;
-  const safeAppId = `${namespace}.app`;
+  const safeOrganization = organization.toLowerCase().replace(/\s+/g, '');
+  const safeAppId =
+    'com' +
+    (safeOrganization ? `.${safeOrganization}` : '') +
+    `.${safeAppName}`;
 
   const { inputBundleId, inputPackageName } = await inquirer.prompt([
     {
@@ -88,79 +97,82 @@ function renameAndroidPackageDir(oldId, newId) {
       default: '',
     },
   ]);
+
   const bundleId = inputBundleId || safeAppId;
   const packageName = inputPackageName || safeAppId;
 
-  const replacements = {
-    'namespace "com.myapp"': `namespace "${namespace}"`,
-    'package com.myapp': `package ${namespace}`,
-    'applicationId "com.myapp"': `applicationId "${packageName}"`,
-    myapp: appName,
-    'com.myapp': packageName,
-  };
+  // const replacements = {
+  //   'namespace "com.myapp"': `namespace "${namespace}"`,
+  //   'package com.myapp': `package ${namespace}`,
+  //   'applicationId "com.myapp"': `applicationId "${packageName}"`,
+  //   myapp: appName,
+  //   'com.myapp': packageName,
+  // };
 
   console.log(`\n📦 Using identifiers:`);
   console.log(`  iOS Bundle ID: ${bundleId}`);
-  console.log(`  Android Namespace: ${namespace}`);
+  // console.log(`  Android Namespace: ${namespace}`);
   console.log(`  Android Package: ${packageName}\n`);
 
   // Step 2:  Perform replacements (common places)
-  const filesToEdit = [
-    'package.json',
-    'app.json',
-    'android/app/build.gradle',
-    'android/app/src/main/AndroidManifest.xml',
-    `ios/myapp/Info.plist`,
-    `ios/myapp/AppDelegate.swift`,
-  ];
+  // const filesToEdit = [
+  //   'package.json',
+  //   'app.json',
+  //   'android/app/build.gradle',
+  //   'android/app/src/main/AndroidManifest.xml',
+  //   `ios/myapp/Info.plist`,
+  //   `ios/myapp/AppDelegate.swift`,
+  // ];
 
-  filesToEdit.forEach(file => {
-    const full = path.join(root, file);
-    if (replaceInFile(full, replacements)) console.log('✅ Updated', file);
-  });
+  // filesToEdit.forEach(file => {
+  //   const full = path.join(root, file);
+  //   if (replaceInFile(full, replacements)) console.log('✅ Updated', file);
+  // });
 
-  // Also do a recursive pass to replace placeholders in JS/TS source and configs
-  console.log('\n🔎 Scanning project files for placeholders...');
-  walk(root, file => {
-    // skip node_modules, .git, build, and Pods
-    if (
-      file.includes('node_modules') ||
-      file.includes('.git') ||
-      file.includes('/build/') ||
-      file.includes('/Pods/') ||
-      file.includes('/.idea/') ||
-      file.includes('/.vscode/') ||
-      file.includes('__tests__')
-    ) {
-      return;
-    }
-    // limited to common text file types
-    const regex =
-      /\.(js|ts|jsx|tsx|json|xml|gradle|plist|properties|txt|pbxproj|png|jpg|jpeg|keystore|a|apk|ipa|pdf)$/;
-    if (!regex.test(file)) return;
-    // ignore binaries files
-    if (/\.(png|jpg|jpeg|keystore|a|apk|ipa|pdf)$/i.test(file)) return;
-    replaceInFile(file, replacements);
-  });
+  // // Also do a recursive pass to replace placeholders in JS/TS source and configs
+  // console.log('\n🔎 Scanning project files for placeholders...');
+  // walk(root, file => {
+  //   // skip node_modules, .git, build, and Pods
+  //   if (
+  //     file.includes('node_modules') ||
+  //     file.includes('.git') ||
+  //     file.includes('/build/') ||
+  //     file.includes('/Pods/') ||
+  //     file.includes('/.idea/') ||
+  //     file.includes('/.vscode/') ||
+  //     file.includes('__tests__')
+  //   ) {
+  //     return;
+  //   }
+  //   // limited to common text file types
+  //   const regex =
+  //     /\.(js|ts|jsx|tsx|json|xml|gradle|plist|properties|txt|pbxproj|png|jpg|jpeg|keystore|a|apk|ipa|pdf)$/;
+  //   if (!regex.test(file)) return;
+  //   // ignore binaries files
+  //   if (/\.(png|jpg|jpeg|keystore|a|apk|ipa|pdf)$/i.test(file)) return;
+  //   replaceInFile(file, replacements);
+  // });
 
   // Step 3: Execute react-native-rename for robust renaming (optional)
-  const formattedAppName = appName.replace(/[^a-zA-Z0-9]/g, '');
+  let renameCmd = `npx react-native-rename "${appName}"`;
+  if (bundleId === packageName) {
+    renameCmd = `-b "${bundleId}"`;
+  } else {
+    renameCmd += `--iosBundleID "${bundleId}" --androidBundleID "${packageName}"`;
+  }
   try {
-    console.log(
-      '\n⚙️ Running react-native-rename to update native project names...',
-    );
-    const renameCmd = `npx react-native-rename "${formattedAppName}" -b ${bundleId}`;
+    console.log(`\n⚙️ Executing command: ${renameCmd}`);
     execSync(renameCmd, { stdio: 'inherit' });
   } catch (e) {
     console.warn(
-      '⚠️ react-native-rename failed or not installed. Try running:\n' +
-        `   npx react-native-rename "${formattedAppName}" -b ${bundleId}\n` +
+      '⚠️ react-native-rename failed or not installed\n.' +
+        `   Try running: ${renameCmd}` +
         '   manually if the app name didn’t update.\n',
     );
   }
 
   // Step 4: Rename Android package folder
-  renameAndroidPackageDir('com.myapp', packageName);
+  // renameAndroidPackageDir('com.myapp', packageName);
 
   // Step 5: Reset git history
   const { resetGit } = await inquirer.prompt([
@@ -195,10 +207,4 @@ function renameAndroidPackageDir(oldId, newId) {
   console.log(`🍏 iOS Bundle ID: ${bundleId}`);
   console.log(`🤖 Android Package: ${packageName}`);
   console.log('─────────────────────────────\n');
-  console.log('\nNext steps:');
-  console.log(' 1️⃣ yarn install');
-  console.log(' 2️⃣ npx pod-install (iOS)');
-  console.log(' 3️⃣ yarn android or yarn ios');
-  console.log('─────────────────────────────\n');
-  console.log('\nHappy Coding!');
 })();
