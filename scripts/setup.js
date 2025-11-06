@@ -154,7 +154,7 @@ function renameAndroidPackageDir(oldId, newId) {
   // });
 
   // Step 3: Execute react-native-rename for robust renaming (optional)
-  let renameCmd = `npx react-native-rename "${appName}"`;
+  let renameCmd = `npx react-native-rename "${appName}" `;
   if (bundleId === packageName) {
     renameCmd = `-b "${bundleId}"`;
   } else {
