@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-const inquirer = require('inquirer');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -65,6 +64,7 @@ function renameAndroidPackageDir(oldId, newId) {
   console.log('\n🛠️ React Native Template Setup\n');
 
   // Step 1: Setup app name, bundle id, package name
+  const inquirer = (await import('inquirer')).default;
   const { appName } = await inquirer.prompt([
     {
       name: 'appName',
