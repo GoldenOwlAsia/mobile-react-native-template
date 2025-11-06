@@ -114,17 +114,18 @@ const root = process.cwd();
     }
   }
 
-  // Done
+  // Step 5️⃣ — Wrap up
   console.log(chalk.magenta('\n─────────────────────────────'));
   console.log(chalk.green.bold('🎉 Setup complete!'));
   console.log(chalk.yellow(`📱 App: ${formattedAppName}`));
   console.log(chalk.yellow(`🍏 iOS Bundle ID: ${bundleId}`));
   console.log(chalk.yellow(`🤖 Android Package: ${packageName}`));
-  console.log(chalk.magenta('─────────────────────────────\n'));
+  console.log(chalk.magenta('─────────────────────────────'));
   console.log(chalk.gray('Next steps:'));
   console.log(chalk.gray('  1️⃣  yarn'));
-  console.log(chalk.gray('  2️⃣  watchman watch-del-all'));
-  console.log(chalk.gray('  3️⃣  run pod install (iOS only)'));
+  console.log(chalk.yellow('  2️⃣  watchman watch-del-all'));
+  console.log(chalk.yellow('  3️⃣  run pod install (iOS only)'));
   console.log(chalk.gray('  4️⃣  yarn android or yarn ios'));
+  console.log(chalk.magenta('─────────────────────────────'));
   console.log(chalk.magenta('\nHappy Coding! 💪'));
 })();
