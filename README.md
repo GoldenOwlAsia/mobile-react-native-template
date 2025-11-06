@@ -1,8 +1,56 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# GoldenOWL Template for React Native
 
-# Getting Started
+## Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+
+### Prerequisites
+
+- Node 20
+- Yarn 4.7.0
+- React Native CLI
+- Xcode (for iOS)
+- Android Studio (for Android)
+
+### Clone:
+
+```sh
+git clone https://github.com/GoldenOwlAsia/mobile-react-native-template.git
+```
+> **Note**: can use ssh or GitHub CLI url
+
+### Configure and Installation:
+
+#### Start with
+
+```sh
+# Using Yarn
+yarn
+# OR using npm
+npm install
+```
+
+#### Then configure your app
+
+```sh
+cd my-app
+```
+
+```sh
+# Using Yarn
+yarn setup
+# OR using npm
+npm run setup
+```
+
+#### Finally run pod install for iOS
+
+```sh
+# Using Yarn
+yarn ios:pod-install
+# OR using npm
+npm run ios:pod-install
+```
 
 ## Step 1: Start Metro
 
