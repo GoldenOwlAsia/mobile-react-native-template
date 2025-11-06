@@ -11,7 +11,7 @@ import {
   REGISTER,
   Storage,
 } from 'redux-persist';
-import { MMKV } from 'react-native-mmkv';
+import { createMMKV, MMKV } from 'react-native-mmkv';
 
 import { api } from '@/services/api';
 
@@ -22,7 +22,7 @@ export const reducers = combineReducers({
   [api.reducerPath]: api.reducer,
 });
 
-const storage = new MMKV();
+const storage = createMMKV();
 export const reduxStorage: Storage = {
   setItem: (key, value) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -34,7 +34,7 @@ export const reduxStorage: Storage = {
     return Promise.resolve(value);
   },
   removeItem: key => {
-    storage.delete(key);
+    storage.remove(key);
     return Promise.resolve();
   },
 };

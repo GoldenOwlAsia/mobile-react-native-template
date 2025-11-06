@@ -28,7 +28,7 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
-    compatibilityJSON: 'v3',
+    compatibilityJSON: 'v4',
   })
   .catch(() => {
     // Handle error here

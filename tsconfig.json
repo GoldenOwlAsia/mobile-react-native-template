@@ -1,5 +1,5 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "types": ["jest", "node"],
     "paths": {
@@ -16,5 +16,6 @@
     "jest.config.js",
     "babel.config.js",
     "index.js"
-  ]
+  ],
+  "exclude": ["**/node_modules", "**/Pods"]
 }
