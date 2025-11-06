@@ -1,24 +1,14 @@
 #!/usr/bin/env node
-import { prompt } from 'inquirer';
-import {
-  existsSync,
-  readFileSync,
-  writeFileSync,
-  readdirSync,
-  statSync,
-  mkdirSync,
-  renameSync,
-  rmdirSync,
-  rmSync,
-} from 'fs';
-import { join } from 'path';
-import { execSync } from 'child_process';
+const inquirer = require('inquirer');
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
 const root = process.cwd();
 
 function replaceInFile(filePath, replacements) {
-  if (!existsSync(filePath)) return false;
-  let content = readFileSync(filePath, 'utf8');
+  if (!fs.existsSync(filePath)) return false;
+  let content = fs.readFileSync(filePath, 'utf8');
   let modified = false;
   for (const [key, value] of Object.entries(replacements)) {
     if (content.includes(key)) {
@@ -26,15 +16,15 @@ function replaceInFile(filePath, replacements) {
       modified = true;
     }
   }
-  if (modified) writeFileSync(filePath, content, 'utf8');
+  if (modified) fs.writeFileSync(filePath, content, 'utf8');
   return modified;
 }
 
 function walk(dir, callback) {
-  const files = readdirSync(dir);
+  const files = fs.readdirSync(dir);
   for (const name of files) {
-    const full = join(dir, name);
-    const stat = statSync(full);
+    const full = path.join(dir, name);
+    const stat = fs.statSync(full);
     if (stat.isDirectory()) walk(full, callback);
     else callback(full);
   }
@@ -42,29 +32,29 @@ function walk(dir, callback) {
 
 // Rename Android package directory (e.g., com/myapp/app)
 function renameAndroidPackageDir(oldId, newId) {
-  const base = join(root, 'android/app/src/main/java');
-  const oldPath = join(base, ...oldId.split('.'));
-  const newPath = join(base, ...newId.split('.'));
-  if (!existsSync(oldPath)) {
+  const base = path.join(root, 'android/app/src/main/java');
+  const oldPath = path.join(base, ...oldId.split('.'));
+  const newPath = path.join(base, ...newId.split('.'));
+  if (!fs.existsSync(oldPath)) {
     console.warn(`⚠️ Skipping Android package rename: ${oldPath} not found`);
     return;
   }
 
   // Create new directories recursively
-  mkdirSync(newPath, { recursive: true });
+  fs.mkdirSync(newPath, { recursive: true });
 
   // Move all files to new location
-  const files = readdirSync(oldPath);
+  const files = fs.readdirSync(oldPath);
   files.forEach(file => {
-    renameSync(join(oldPath, file), join(newPath, file));
+    fs.renameSync(path.join(oldPath, file), path.join(newPath, file));
   });
 
   // Clean up empty old dirs
   const parts = oldId.split('.');
   for (let i = parts.length; i > 0; i--) {
-    const dir = join(base, ...parts.slice(0, i));
-    if (existsSync(dir) && readdirSync(dir).length === 0) {
-      rmdirSync(dir);
+    const dir = path.join(base, ...parts.slice(0, i));
+    if (fs.existsSync(dir) && fs.readdirSync(dir).length === 0) {
+      fs.rmdirSync(dir);
     }
   }
 
@@ -75,7 +65,7 @@ function renameAndroidPackageDir(oldId, newId) {
   console.log('\n🛠️ React Native Template Setup\n');
 
   // Step 1: Setup app name, bundle id, package name
-  const { appName } = await prompt([
+  const { appName } = await inquirer.prompt([
     {
       name: 'appName',
       message: 'App name (JS):',
@@ -86,7 +76,7 @@ function renameAndroidPackageDir(oldId, newId) {
   const namespace = `com.${safeAppName}`;
   const safeAppId = `${namespace}.app`;
 
-  const { inputBundleId, inputPackageName } = await prompt([
+  const { inputBundleId, inputPackageName } = await inquirer.prompt([
     {
       name: 'inputBundleId',
       message: `iOS Bundle ID (leave empty to use default ${safeAppId}):`,
@@ -125,7 +115,7 @@ function renameAndroidPackageDir(oldId, newId) {
   ];
 
   filesToEdit.forEach(file => {
-    const full = join(root, file);
+    const full = path.join(root, file);
     if (replaceInFile(full, replacements)) console.log('✅ Updated', file);
   });
 
@@ -173,7 +163,7 @@ function renameAndroidPackageDir(oldId, newId) {
   renameAndroidPackageDir('com.myapp', packageName);
 
   // Step 5: Reset git history
-  const { resetGit } = await prompt([
+  const { resetGit } = await inquirer.prompt([
     {
       name: 'resetGit',
       type: 'confirm',
@@ -184,8 +174,8 @@ function renameAndroidPackageDir(oldId, newId) {
   if (resetGit) {
     try {
       console.log('\n♻️ Resetting git history...');
-      if (existsSync(join(root, '.git'))) {
-        rmSync(join(root, '.git'), { recursive: true, force: true });
+      if (fs.existsSync(path.join(root, '.git'))) {
+        fs.rmSync(path.join(root, '.git'), { recursive: true, force: true });
       }
       execSync('git init', { stdio: 'inherit' });
       execSync('git add .', { stdio: 'inherit' });
