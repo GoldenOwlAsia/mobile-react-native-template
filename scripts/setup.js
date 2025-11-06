@@ -2,74 +2,21 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const chalk = require('chalk');
 
 const root = process.cwd();
 
-function replaceInFile(filePath, replacements) {
-  if (!fs.existsSync(filePath)) return false;
-  let content = fs.readFileSync(filePath, 'utf8');
-  let modified = false;
-  for (const [key, value] of Object.entries(replacements)) {
-    if (content.includes(key)) {
-      content = content.split(key).join(value);
-      modified = true;
-    }
-  }
-  if (modified) fs.writeFileSync(filePath, content, 'utf8');
-  return modified;
-}
-
-function walk(dir, callback) {
-  const files = fs.readdirSync(dir);
-  for (const name of files) {
-    const full = path.join(dir, name);
-    const stat = fs.statSync(full);
-    if (stat.isDirectory()) walk(full, callback);
-    else callback(full);
-  }
-}
-
-// Rename Android package directory (e.g., com/myapp/app)
-function renameAndroidPackageDir(oldId, newId) {
-  const base = path.join(root, 'android/app/src/main/java');
-  const oldPath = path.join(base, ...oldId.split('.'));
-  const newPath = path.join(base, ...newId.split('.'));
-  if (!fs.existsSync(oldPath)) {
-    console.warn(`⚠️ Skipping Android package rename: ${oldPath} not found`);
-    return;
-  }
-
-  // Create new directories recursively
-  fs.mkdirSync(newPath, { recursive: true });
-
-  // Move all files to new location
-  const files = fs.readdirSync(oldPath);
-  files.forEach(file => {
-    fs.renameSync(path.join(oldPath, file), path.join(newPath, file));
-  });
-
-  // Clean up empty old dirs
-  const parts = oldId.split('.');
-  for (let i = parts.length; i > 0; i--) {
-    const dir = path.join(base, ...parts.slice(0, i));
-    if (fs.existsSync(dir) && fs.readdirSync(dir).length === 0) {
-      fs.rmdirSync(dir);
-    }
-  }
-
-  console.log(`✅ Android package folder renamed: ${oldPath} → ${newPath}`);
-}
-
 (async () => {
-  console.log('\n🛠️ React Native Template Setup\n');
+  console.log(chalk.cyan.bold('\n🛠️  React Native Template Setup\n'));
 
-  // Step 1: Setup app name, bundle id, package name
+  // Step 1️⃣ — Ask for app name and organization
   const inquirer = (await import('inquirer')).default;
   const { appName, organization } = await inquirer.prompt([
     {
       name: 'appName',
       message: 'App name (JS):',
       default: 'myapp',
+      validate: input => input.trim().length > 0 || 'App name cannot be empty.',
     },
     {
       name: 'organization',
@@ -78,13 +25,22 @@ function renameAndroidPackageDir(oldId, newId) {
     },
   ]);
 
-  const safeAppName = appName.toLowerCase().replace(/\s+/g, '');
-  const safeOrganization = organization.toLowerCase().replace(/\s+/g, '');
+  const safeAppName = appName.trim().toLowerCase().replace(/\s+/g, '');
+  const safeOrganization = organization
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '');
   const safeAppId =
     'com' +
     (safeOrganization ? `.${safeOrganization}` : '') +
     `.${safeAppName}`;
+  const formattedAppName = appName
+    .split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join('')
+    .replace(/[^a-zA-Z0-9]/g, '');
 
+  // Step 2️⃣ — Ask for bundle IDs (optional override)
   const { inputBundleId, inputPackageName } = await inquirer.prompt([
     {
       name: 'inputBundleId',
@@ -98,83 +54,39 @@ function renameAndroidPackageDir(oldId, newId) {
     },
   ]);
 
-  const bundleId = inputBundleId || safeAppId;
-  const packageName = inputPackageName || safeAppId;
+  const bundleId = inputBundleId.trim() || safeAppId;
+  const packageName = inputPackageName.trim() || safeAppId;
 
-  // const replacements = {
-  //   'namespace "com.myapp"': `namespace "${namespace}"`,
-  //   'package com.myapp': `package ${namespace}`,
-  //   'applicationId "com.myapp"': `applicationId "${packageName}"`,
-  //   myapp: appName,
-  //   'com.myapp': packageName,
-  // };
+  console.log(chalk.green.bold('\n📦 Configuration Summary:'));
+  console.log(`  ${chalk.yellow('Input App Name:')} ${appName}`);
+  console.log(`  ${chalk.yellow('Formatted Name:')} ${formattedAppName}`);
+  console.log(`  ${chalk.yellow('iOS Bundle ID:')} ${bundleId}`);
+  console.log(`  ${chalk.yellow('Android Package:')} ${packageName}`);
 
-  console.log(`\n📦 Using identifiers:`);
-  console.log(`  iOS Bundle ID: ${bundleId}`);
-  // console.log(`  Android Namespace: ${namespace}`);
-  console.log(`  Android Package: ${packageName}\n`);
-
-  // Step 2:  Perform replacements (common places)
-  // const filesToEdit = [
-  //   'package.json',
-  //   'app.json',
-  //   'android/app/build.gradle',
-  //   'android/app/src/main/AndroidManifest.xml',
-  //   `ios/myapp/Info.plist`,
-  //   `ios/myapp/AppDelegate.swift`,
-  // ];
-
-  // filesToEdit.forEach(file => {
-  //   const full = path.join(root, file);
-  //   if (replaceInFile(full, replacements)) console.log('✅ Updated', file);
-  // });
-
-  // // Also do a recursive pass to replace placeholders in JS/TS source and configs
-  // console.log('\n🔎 Scanning project files for placeholders...');
-  // walk(root, file => {
-  //   // skip node_modules, .git, build, and Pods
-  //   if (
-  //     file.includes('node_modules') ||
-  //     file.includes('.git') ||
-  //     file.includes('/build/') ||
-  //     file.includes('/Pods/') ||
-  //     file.includes('/.idea/') ||
-  //     file.includes('/.vscode/') ||
-  //     file.includes('__tests__')
-  //   ) {
-  //     return;
-  //   }
-  //   // limited to common text file types
-  //   const regex =
-  //     /\.(js|ts|jsx|tsx|json|xml|gradle|plist|properties|txt|pbxproj|png|jpg|jpeg|keystore|a|apk|ipa|pdf)$/;
-  //   if (!regex.test(file)) return;
-  //   // ignore binaries files
-  //   if (/\.(png|jpg|jpeg|keystore|a|apk|ipa|pdf)$/i.test(file)) return;
-  //   replaceInFile(file, replacements);
-  // });
-
-  // Step 3: Execute react-native-rename for robust renaming (optional)
-  let renameCmd = `npx react-native-rename "${appName}" `;
+  // Step 3️⃣ — Run react-native-rename
+  let renameCmd = `npx react-native-rename "${formattedAppName}"`;
   if (bundleId === packageName) {
-    renameCmd = `-b "${bundleId}"`;
+    renameCmd += ` -b "${bundleId}"`;
   } else {
-    renameCmd += `--iosBundleID "${bundleId}" --androidBundleID "${packageName}"`;
+    renameCmd += ` --iosBundleID "${bundleId}" --androidBundleID "${packageName}"`;
   }
+
+  console.log(chalk.cyan(`\n⚙️  Running rename command:`));
+  console.log(chalk.gray(`   ${renameCmd}\n`));
+
   try {
-    console.log(`\n⚙️ Executing command: ${renameCmd}`);
     execSync(renameCmd, { stdio: 'inherit' });
+    console.log(chalk.green('\n✅ Rename completed successfully.'));
   } catch (e) {
     console.warn(
-      '⚠️ react-native-rename failed or not installed\n.' +
-        `   Try running: ${renameCmd}` +
-        '   manually if the app name didn’t update.\n',
+      chalk.red(
+        '\n⚠️  react-native-rename failed. Try running manually:\n' +
+          `   ${renameCmd}\n`,
+      ),
     );
   }
 
-  // Step 4: Rename Android package folder
-  // renameAndroidPackageDir('com.myapp', packageName);
-
-  // Step 5: Reset git history
+  // Step 4️⃣ — Optionally reset git
   const { resetGit } = await inquirer.prompt([
     {
       name: 'resetGit',
@@ -185,7 +97,7 @@ function renameAndroidPackageDir(oldId, newId) {
   ]);
   if (resetGit) {
     try {
-      console.log('\n♻️ Resetting git history...');
+      console.log(chalk.cyan('\n♻️  Resetting git history...'));
       if (fs.existsSync(path.join(root, '.git'))) {
         fs.rmSync(path.join(root, '.git'), { recursive: true, force: true });
       }
@@ -194,17 +106,17 @@ function renameAndroidPackageDir(oldId, newId) {
       execSync('git commit -m "Initial commit from template"', {
         stdio: 'inherit',
       });
-      console.log('✅ Git reset complete');
+      console.log(chalk.green('✅ Git reset complete.'));
     } catch (e) {
-      console.warn('⚠️ Failed to reset git:', e.message);
+      console.warn(chalk.red('⚠️  Failed to reset git:'), e.message);
     }
   }
 
   // Done
-  console.log('\n─────────────────────────────');
-  console.log('\n🎉 Setup complete!');
-  console.log(`📱 App: ${appName}`);
-  console.log(`🍏 iOS Bundle ID: ${bundleId}`);
-  console.log(`🤖 Android Package: ${packageName}`);
-  console.log('─────────────────────────────\n');
+  console.log(chalk.magenta('\n─────────────────────────────'));
+  console.log(chalk.green.bold('🎉 Setup complete!'));
+  console.log(chalk.yellow(`📱 App: ${formattedAppName}`));
+  console.log(chalk.yellow(`🍏 iOS Bundle ID: ${bundleId}`));
+  console.log(chalk.yellow(`🤖 Android Package: ${packageName}`));
+  console.log(chalk.magenta('─────────────────────────────\n'));
 })();
