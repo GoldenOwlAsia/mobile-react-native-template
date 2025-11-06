@@ -2,15 +2,17 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const chalk = require('chalk');
 
 const root = process.cwd();
 
 (async () => {
   console.log(chalk.cyan.bold('\n🛠️  React Native Template Setup\n'));
 
-  // Step 1️⃣ — Ask for app name and organization
+  // Step 0️⃣ — Load dependencies
   const inquirer = (await import('inquirer')).default;
+  const chalk = (await import('chalk')).default;
+
+  // Step 1️⃣ — Ask for app name and organization
   const { appName, organization } = await inquirer.prompt([
     {
       name: 'appName',
