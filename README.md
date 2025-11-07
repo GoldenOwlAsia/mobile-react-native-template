@@ -33,14 +33,45 @@ npm install
 #### Then configure your app
 
 ```sh
-cd my-app
+cd <repo folder>
 ```
 
 ```sh
 # Using Yarn
-yarn setup
+yarn setup [options]
 # OR using npm
-npm run setup
+npm run setup [options]
+```
+
+> **Available Options**
+
+| Flag             | Alias        | Type      | Description                                                                                                     |
+| ---------------- | ------------ | --------- | --------------------------------------------------------------------------------------------------------------- |
+| `--appName`      | `-n`         | `string`  | App name (JavaScript name). Must start with a letter and contain only letters, numbers, spaces, or underscores. |
+| `--organization` | `-o`         | `string`  | Organization or company name (used in bundle/package IDs). Optional.                                            |
+| `--bundleId`     | `-i`         | `string`  | Custom iOS bundle identifier. Default is generated from organization + app name.                                |
+| `--packageName`  | `-a`         | `string`  | Custom Android package name. Default is generated from organization + app name.                                 |
+| `--resetGit`     | *(no alias)* | `boolean` | Delete `.git` and reinitialize the repository. Default: `false`.                                                |
+| `--autoDefault`  | *(no alias)* | `boolean` | Run in **non-interactive** mode — auto-accept defaults and skip all prompts. Ideal for CI/CD.                   |
+| `--dryRun`       | `-d`         | `boolean` | Print all planned steps **without making changes**. Useful for safe testing.                                    |
+
+> **Example for Yarn (remember to add '--' before adding arguments)**
+
+```sh
+# No args --> full interactive mode
+yarn setup
+
+# Few args --> partial interactive mode
+yarn setup -- --appName MyApp --organization myorg
+
+# Full args --> non interactive mode
+yarn setup -- \
+  --appName MyApp \
+  --organization myorg \
+  --bundleId com.myorg.myapp \
+  --packageName com.myorg.myapp \
+  --resetGit=false \
+  --autoDefault
 ```
 
 #### Finally run pod install for iOS

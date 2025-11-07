@@ -10,7 +10,7 @@
     "start": "react-native start",
     "test": "jest",
     "pod-install": "npx pod-install",
-    "setup": "node scripts/setup.js"
+    "setup:name-ids": "node scripts/setup_app_name_ids.js"
   },
   "dependencies": {
     "@react-native-masked-view/masked-view": "^0.3.2",
@@ -31,7 +31,8 @@
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0",
     "react-redux": "^9.2.0",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
