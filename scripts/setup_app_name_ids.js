@@ -307,7 +307,7 @@ const setupAppNameAndIds = async () => {
   console.log(chalk.magenta('─────────────────────────────'));
 };
 
-async () => {
+(async () => {
   try {
     await setupAppNameAndIds();
   } catch (e) {
@@ -319,4 +319,4 @@ async () => {
       process.exit(1);
     }
   }
-};
+})();
