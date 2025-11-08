@@ -38,7 +38,13 @@ const fail = (msg, code = 1) => {
   process.exit(code);
 };
 
-(async () => {
+// 🧩 Handle Ctrl + C gracefully (even before inquirer is loaded)
+process.on('SIGINT', () => {
+  console.log('\n🛑 Setup interrupted.\n');
+  process.exit(0);
+});
+
+const setupAppNameAndIds = async () => {
   // Step 0️⃣ — Load dependencies
   const [{ default: chalk }, { default: yargs }, { hideBin }] =
     await Promise.all([
@@ -182,7 +188,7 @@ const fail = (msg, code = 1) => {
       await inquirer.prompt([
         {
           name: SETUP_DATA.bundleId.field,
-          message: `${SETUP_DATA.bundleId.describe} ${noteSuffix}`,
+          message: `${SETUP_DATA.bundleId.describe} ${noteSuffix}:`,
           default: '',
         },
       ])
@@ -198,7 +204,7 @@ const fail = (msg, code = 1) => {
       await inquirer.prompt([
         {
           name: SETUP_DATA.packageName.field,
-          message: `${SETUP_DATA.packageName.describe} ${noteSuffix}`,
+          message: `${SETUP_DATA.packageName.describe} ${noteSuffix}:`,
           default: '',
         },
       ])
@@ -253,8 +259,8 @@ const fail = (msg, code = 1) => {
   }
 
   // Step 8️⃣ — Optional git reset
-  let resetGit = args.resetGit ?? false;
-  if (!resetGit && inquirer) {
+  let resetGit = args.resetGit;
+  if (typeof resetGit !== 'boolean' && inquirer) {
     resetGit = (
       await inquirer.prompt([
         {
@@ -297,5 +303,20 @@ const fail = (msg, code = 1) => {
   console.log(chalk.yellow('  3️⃣  run pod install (iOS only)'));
   console.log(chalk.gray('  4️⃣  yarn android or yarn ios'));
   console.log(chalk.magenta('─────────────────────────────'));
-  console.log(chalk.magenta('\nHappy Coding! 💪'));
-})();
+  console.log(chalk.magenta('Happy Coding! 💪'));
+  console.log(chalk.magenta('─────────────────────────────'));
+};
+
+async () => {
+  try {
+    await setupAppNameAndIds();
+  } catch (e) {
+    if (e?.name === 'ExitPromptError') {
+      console.log('\n🛑 Setup cancelled by user.\n');
+      process.exit(0);
+    } else {
+      console.error('❌ Unexpected error:', e.message);
+      process.exit(1);
+    }
+  }
+};
