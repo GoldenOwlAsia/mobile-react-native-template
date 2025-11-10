@@ -82,18 +82,19 @@ const setupAppNameAndIds = async () => {
       describe: SETUP_DATA.resetGit.describe,
       default: false,
     })
-    .option('autoDefault', {
+    .option('resetDefault', {
       type: 'boolean',
-      describe: 'Auto accept all defaults (non-interactive)',
+      describe:
+        'Reset to defaults (non-interactive and use myapp as name and com.myapp as ids)',
       default: false,
     })
     .strict()
     .parse();
 
   //* Step 1️⃣ additional - Load inquirer if need
-  const autoDefault = args.autoDefault ?? false;
+  const resetDefault = args.resetDefault ?? false;
   let inquirer = undefined;
-  if (autoDefault) {
+  if (resetDefault) {
     console.log(chalk.gray('\n💡 Ran in non-interactive mode (all defaults).'));
   } else {
     inquirer = (await import('inquirer')).default;
@@ -104,7 +105,7 @@ const setupAppNameAndIds = async () => {
   let appName = (args.appName || '').trim();
   if (!appName) {
     const defaultAppName = 'myapp';
-    if (autoDefault) {
+    if (resetDefault) {
       appName = defaultAppName;
     } else if (inquirer) {
       appName = (

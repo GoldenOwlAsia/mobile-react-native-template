@@ -52,10 +52,9 @@ npm run setup [options]
 | `--bundleId`     | `-i`         | `string`  | Custom iOS bundle identifier. Default is generated from organization + app name.                                |
 | `--packageName`  | `-a`         | `string`  | Custom Android package name. Default is generated from organization + app name.                                 |
 | `--resetGit`     | *(no alias)* | `boolean` | Delete `.git` and reinitialize the repository. Default: `false`.                                                |
-| `--autoDefault`  | *(no alias)* | `boolean` | Run in **non-interactive** mode — auto-accept defaults and skip all prompts. Ideal for CI/CD.                   |
-| `--dryRun`       | `-d`         | `boolean` | Print all planned steps **without making changes**. Useful for safe testing.                                    |
+| `--resetDefault`  | *(no alias)* | `boolean` | Run in **non-interactive** mode — reset name and ids to defaults (myapp and com.myapp) and skip all prompts.                          |
 
-> **Example for Yarn (remember to add '--' before adding arguments)**
+> **Example for Yarn**
 
 ```sh
 # No args --> full interactive mode
@@ -65,13 +64,13 @@ yarn setup
 yarn setup -- --appName MyApp --organization myorg
 
 # Full args --> non interactive mode
-yarn setup -- \
+yarn setup \
   --appName MyApp \
   --organization myorg \
   --bundleId com.myorg.myapp \
   --packageName com.myorg.myapp \
   --resetGit=false \
-  --autoDefault
+  --resetDefault
 ```
 
 #### Finally run pod install for iOS
