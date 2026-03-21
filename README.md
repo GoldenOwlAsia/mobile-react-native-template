@@ -23,7 +23,7 @@ Template for a React Native app on **0.84.x** with TypeScript, navigation, persi
    cp .env.sample .env
    ```
 
-   The Babel config loads `.env` via [`react-native-dotenv`](https://github.com/goatandsheep/react-native-dotenv) using the `@env` module. A sample variable `API_URL` is listed in `.env.sample`. Import it where needed, for example `import { API_URL } from '@env'` (add a small `*.d.ts` for `@env` if TypeScript complains). The starter `src/services/api.ts` references `process.env.API_URL`; switch it to `@env` (or your preferred approach) so the value from `.env` is actually applied at build time.
+   The Babel config loads `.env` via [`react-native-dotenv`](https://github.com/goatandsheep/react-native-dotenv) using the `@env` module. A sample variable `API_URL` is listed in `.env.sample`. Use it in React Query fetchers, for example `fetch(\`${API_URL}/users\`)`(add a small`\*.d.ts`for`@env` if TypeScript complains).
 
 3. **iOS — CocoaPods**
 
@@ -62,7 +62,7 @@ yarn ios
 - **i18next** / **react-i18next** — initialized in `src/translations/index.ts` with English and Vietnamese resources under `src/translations/resources/`.
 - **Theming** — tokens in `src/theme/` (colors, spacing, typography, borders).
 - **UI primitives** — `Button`, `Input`, `Text`, `SafeAreaView` under `src/components/` (with example tests).
-- **API helper** — `src/services/api.ts` as a starting point for `fetch`-based calls.
+- **Data fetching** — TanStack React Query (`@tanstack/react-query`) with `src/services/queryClient.ts` (see `src/services/README.md`). `src/services/post.ts` + `Home` show a minimal `useQuery` flow. `App.tsx` wraps the tree in `QueryClientProvider` and ties query focus to `AppState` on native.
 
 Native gesture handling is set up via `gesture-handler.js` / `gesture-handler.native.js` and imported from `App.tsx`.
 
@@ -73,7 +73,7 @@ src/
   components/     # Reusable UI
   navigators/     # Navigation containers / stacks
   screens/        # Screen components (e.g. Home, SignIn)
-  services/       # API and similar
+  services/       # API services
   stores/         # Zustand stores + MMKV storage adapter
   theme/          # Design tokens
   translations/   # i18n setup and locale files
@@ -88,6 +88,7 @@ App.tsx           # Root: SafeAreaProvider, hydration, navigator
 2. **Navigation** — Add screens to `src/screens/`, export them from `src/screens/index.ts`, register routes in `Application.tsx`, and extend `ApplicationStackParamList` in `src/types/navigation.d.ts`.
 3. **Locales** — Add namespaces or languages under `src/translations/resources/` and register them in `src/translations/index.ts`.
 4. **Auth / gating** — The stack switches between `SignIn` and `Home` based on `useUserStore`’s `isLoggedIn`; replace or extend this flow as needed.
+5. **APIs with React Query** — Read `src/services/README.md` and follow `src/screens/Home/useDemoPostsQuery.ts` (used on the Home screen): query keys, `fetch` in the query function, `useQuery` in a small hook. Copy that shape per resource; add `useMutation` where you write data.
 
 ## Testing and quality
 

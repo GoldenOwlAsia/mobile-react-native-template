@@ -1,7 +1,9 @@
+import { QueryClientProvider } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import ApplicationNavigator from '@/navigators/Application';
+import { queryClient } from '@/services/queryClient';
 import { useUserStore } from '@/stores';
 
 import './gesture-handler';
@@ -25,9 +27,11 @@ function App(): React.ReactElement | null {
   }
 
   return (
-    <SafeAreaProvider>
-      <ApplicationNavigator />
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <ApplicationNavigator />
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }
 

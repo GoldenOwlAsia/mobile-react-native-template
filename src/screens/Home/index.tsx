@@ -1,16 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 
 import { border, colors, fontSize, spacing } from '@/theme';
 import { Button, SafeAreaView } from '@/components';
 import { useUserStore } from '@/stores';
+import { usePostsQuery } from '@/services/post';
 
 const Home = () => {
   const email = useUserStore(state => state.email);
   const logout = useUserStore(state => state.logout);
   const { t } = useTranslation(['example']);
+  const postsQuery = usePostsQuery();
 
   const onPress = () => {
     logout();
@@ -33,6 +41,22 @@ const Home = () => {
           }>
           <Text>{`Change language: ${i18next.language}`}</Text>
         </TouchableOpacity>
+        <View style={styles.sampleBox}>
+          <Text style={styles.sampleTitle}>React Query sample</Text>
+          {postsQuery.isPending ? <ActivityIndicator /> : null}
+          {postsQuery.isError ? (
+            <Text style={styles.sampleError}>
+              {postsQuery.error instanceof Error
+                ? postsQuery.error.message
+                : 'Request failed'}
+            </Text>
+          ) : null}
+          {postsQuery.isSuccess ? (
+            <Text style={styles.sampleBody} numberOfLines={2}>
+              {postsQuery.data[0]?.title ?? 'No title'}
+            </Text>
+          ) : null}
+        </View>
         <Button text="Logout" onPress={onPress} />
       </View>
     </SafeAreaView>
@@ -56,5 +80,27 @@ const styles = StyleSheet.create({
     marginVertical: spacing.md,
     backgroundColor: colors.palette.angry100,
     borderRadius: border.radius,
+  },
+  sampleBox: {
+    width: '88%',
+    maxWidth: 400,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    borderRadius: border.radius,
+    backgroundColor: colors.palette.neutral200,
+  },
+  sampleTitle: {
+    ...fontSize.sm,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: spacing.xs,
+  },
+  sampleBody: {
+    ...fontSize.sm,
+    color: colors.text,
+  },
+  sampleError: {
+    ...fontSize.sm,
+    color: colors.palette.angry500,
   },
 });
