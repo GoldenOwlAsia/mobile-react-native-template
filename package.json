@@ -13,14 +13,14 @@
   },
   "dependencies": {
     "@react-native-masked-view/masked-view": "^0.3.2",
-    "@react-native/new-app-screen": "0.82.1",
+    "@react-native/new-app-screen": "0.84.1",
     "@react-navigation/native": "^7.1.19",
     "@react-navigation/stack": "^7.6.2",
     "@reduxjs/toolkit": "^2.10.1",
     "i18next": "^25.6.0",
-    "react": "19.1.1",
+    "react": "19.2.3",
     "react-i18next": "^16.2.4",
-    "react-native": "0.82.1",
+    "react-native": "0.84.1",
     "react-native-gesture-handler": "^2.29.1",
     "react-native-mmkv": "^4.0.0",
     "react-native-nitro-modules": "^0.31.4",
@@ -33,17 +33,17 @@
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "20.0.0",
-    "@react-native-community/cli-platform-android": "20.0.0",
-    "@react-native-community/cli-platform-ios": "20.0.0",
-    "@react-native/babel-preset": "0.82.1",
-    "@react-native/eslint-config": "0.82.1",
-    "@react-native/metro-config": "0.82.1",
-    "@react-native/typescript-config": "0.82.1",
+    "@react-native-community/cli": "20.1.0",
+    "@react-native-community/cli-platform-android": "20.1.0",
+    "@react-native-community/cli-platform-ios": "20.1.0",
+    "@react-native/babel-preset": "0.84.1",
+    "@react-native/eslint-config": "0.84.1",
+    "@react-native/metro-config": "0.84.1",
+    "@react-native/typescript-config": "0.84.1",
     "@testing-library/react-native": "^13.3.3",
     "@types/eslint-plugin-jsx-a11y": "^6",
     "@types/jest": "^29.5.13",
-    "@types/react": "^19.1.1",
+    "@types/react": "^19.2.0",
     "@types/react-test-renderer": "^19.1.0",
     "babel-jest": "^30.2.0",
     "babel-plugin-module-resolver": "^5.0.2",
@@ -63,6 +63,6 @@
     "typescript-eslint": "^8.46.3"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">= 22.11.0"
   }
 }
