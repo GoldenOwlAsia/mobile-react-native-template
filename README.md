@@ -1,97 +1,105 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Golden Owl React Native app template
 
-# Getting Started
+Template for a React Native app on **0.84.x** with TypeScript, navigation, persisted state, i18n, and a small UI layer. Use it as a base: rename the app, adjust env and API code, then build your product.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Prerequisites
 
-## Step 1: Start Metro
+- [React Native environment setup](https://reactnative.dev/docs/set-up-your-environment) (Xcode, Android SDK, etc.)
+- **Node.js** `>= 22.11.0` (see `package.json` `engines`)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## First-time setup
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+1. **Install dependencies**
+
+   ```sh
+   yarn install
+   ```
+
+2. **Environment variables**
+
+   Copy the sample env file and edit values as needed:
+
+   ```sh
+   cp .env.sample .env
+   ```
+
+   The Babel config loads `.env` via [`react-native-dotenv`](https://github.com/goatandsheep/react-native-dotenv) using the `@env` module. A sample variable `API_URL` is listed in `.env.sample`. Import it where needed, for example `import { API_URL } from '@env'` (add a small `*.d.ts` for `@env` if TypeScript complains). The starter `src/services/api.ts` references `process.env.API_URL`; switch it to `@env` (or your preferred approach) so the value from `.env` is actually applied at build time.
+
+3. **iOS — CocoaPods**
+
+   From the project root:
+
+   ```sh
+   yarn pod-install
+   ```
+
+   Or use `bundle install` and `bundle exec pod install` under `ios/` if you rely on the Gemfile there.
+
+## Running the app
 
 ```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
 yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
+# or
 yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Scripts
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+| Script             | Purpose                                |
+| ------------------ | -------------------------------------- |
+| `yarn start`       | Start Metro                            |
+| `yarn android`     | Run on Android                         |
+| `yarn ios`         | Run on iOS                             |
+| `yarn pod-install` | Install iOS pods via `npx pod-install` |
+| `yarn test`        | Run Jest                               |
+| `yarn lint`        | Run ESLint                             |
 
-## Step 3: Modify your app
+## What’s included
 
-Now that you have successfully run the app, let's make changes!
+- **TypeScript** with path alias `@/` → `src/` (see `babel.config.js` and `tsconfig.json`).
+- **React Navigation** — stack navigator in `src/navigators/Application.tsx`; route param types in `src/types/navigation.d.ts`.
+- **Zustand** + **MMKV** — example user session store with persistence (`src/stores/userStore.ts`, `src/stores/mmkvStorage.ts`). `App.tsx` waits for rehydration before rendering.
+- **i18next** / **react-i18next** — initialized in `src/translations/index.ts` with English and Vietnamese resources under `src/translations/resources/`.
+- **Theming** — tokens in `src/theme/` (colors, spacing, typography, borders).
+- **UI primitives** — `Button`, `Input`, `Text`, `SafeAreaView` under `src/components/` (with example tests).
+- **API helper** — `src/services/api.ts` as a starting point for `fetch`-based calls.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Native gesture handling is set up via `gesture-handler.js` / `gesture-handler.native.js` and imported from `App.tsx`.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## Project layout (high level)
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+```text
+src/
+  components/     # Reusable UI
+  navigators/     # Navigation containers / stacks
+  screens/        # Screen components (e.g. Home, SignIn)
+  services/       # API and similar
+  stores/         # Zustand stores + MMKV storage adapter
+  theme/          # Design tokens
+  translations/   # i18n setup and locale files
+  types/          # Shared TypeScript types (navigation, i18n)
+  utils/          # Helpers
+App.tsx           # Root: SafeAreaProvider, hydration, navigator
+```
 
-## Congratulations! :tada:
+## Customizing this template
 
-You've successfully run and modified your React Native App. :partying_face:
+1. **Rename the app** — Update `name` and `displayName` in `app.json` and the `name` field in `package.json` to match your product.
+2. **Navigation** — Add screens to `src/screens/`, export them from `src/screens/index.ts`, register routes in `Application.tsx`, and extend `ApplicationStackParamList` in `src/types/navigation.d.ts`.
+3. **Locales** — Add namespaces or languages under `src/translations/resources/` and register them in `src/translations/index.ts`.
+4. **Auth / gating** — The stack switches between `SignIn` and `Home` based on `useUserStore`’s `isLoggedIn`; replace or extend this flow as needed.
 
-### Now what?
+## Testing and quality
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+- **Jest** — Config in `jest.config.js`; setup in `jest.setup.js`. Test files use the `*.test.ts(x)` pattern.
+- **ESLint** — Extends React Native and Airbnb-related rules; run `npm run lint`.
 
-# Troubleshooting
+## Troubleshooting
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+If builds or Metro fail, use the official [React Native troubleshooting guide](https://reactnative.dev/docs/troubleshooting) and confirm your toolchain matches the version pinned in this repo.
 
-# Learn More
+## Learn more
 
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- [React Native documentation](https://reactnative.dev/docs/getting-started)
+- [React Navigation](https://reactnavigation.org/docs/getting-started)
+- [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction)
