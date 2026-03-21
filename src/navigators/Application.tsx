@@ -1,15 +1,14 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
 
 import type { ApplicationStackParamList } from '@/types/navigation';
 import { Home, SignIn } from '@/screens';
-import { isLoggedInSelector } from '@/stores/user/selector';
+import { useUserStore } from '@/stores';
 
 const Stack = createStackNavigator<ApplicationStackParamList>();
 
 const ApplicationNavigator = () => {
-  const isLoggedIn = useSelector(isLoggedInSelector);
+  const isLoggedIn = useUserStore(state => state.isLoggedIn);
 
   return (
     <NavigationContainer>
