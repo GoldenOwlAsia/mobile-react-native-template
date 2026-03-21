@@ -3,16 +3,15 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, SafeAreaView, Text, TextInput } from '@/components';
 import { colors, fontSize, spacing } from '@/theme';
-import { useDispatch } from '@/hooks';
-import { login } from '@/stores/user/reducer';
+import { useUserStore } from '@/stores';
 
 const SignIn = () => {
-  const dispatch = useDispatch();
+  const login = useUserStore(state => state.login);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const onSubmit = () => {
-    dispatch(login(email));
+    login(email);
   };
 
   return (

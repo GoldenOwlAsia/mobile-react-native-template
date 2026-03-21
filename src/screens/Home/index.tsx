@@ -1,22 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 
 import { border, colors, fontSize, spacing } from '@/theme';
 import { Button, SafeAreaView } from '@/components';
-import { emailSelector } from '@/stores/user/selector';
-import { useDispatch } from '@/hooks';
-import { logout } from '@/stores/user/reducer';
+import { useUserStore } from '@/stores';
 
 const Home = () => {
-  const email = useSelector(emailSelector);
-  const dispatch = useDispatch();
+  const email = useUserStore(state => state.email);
+  const logout = useUserStore(state => state.logout);
   const { t } = useTranslation(['example']);
 
   const onPress = () => {
-    dispatch(logout());
+    logout();
   };
 
   const onChangeLanguage = (lang: 'vi' | 'en') => {

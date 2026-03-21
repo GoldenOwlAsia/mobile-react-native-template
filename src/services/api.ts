@@ -1,28 +1,15 @@
-import {
-  BaseQueryFn,
-  FetchArgs,
-  createApi,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-} from '@reduxjs/toolkit/query/react';
+const baseUrl = process.env.API_URL ?? '';
 
-const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.API_URL,
-});
+type RequestInitSubset = Pick<RequestInit, 'method' | 'headers' | 'body'>;
 
-const baseQueryWithInterceptor: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
-  const result = await baseQuery(args, api, extraOptions);
-  if (result.error && result.error.status === 401) {
+export async function apiFetch(
+  path: string,
+  init?: RequestInitSubset,
+): Promise<Response> {
+  const url = path.startsWith('http') ? path : `${baseUrl}${path}`;
+  const response = await fetch(url, init);
+  if (response.status === 401) {
     // Handle case where status code is 401
   }
-  return result;
-};
-
-export const api = createApi({
-  baseQuery: baseQueryWithInterceptor,
-  endpoints: () => ({}),
-});
+  return response;
+}
