@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "pod-install": "npx pod-install"
+    "pod-install": "npx pod-install",
+    "rename-app": "node scripts/rename-app.mjs"
   },
   "dependencies": {
     "@react-native-masked-view/masked-view": "^0.3.2",
