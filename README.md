@@ -53,6 +53,7 @@ yarn ios
 | `yarn pod-install` | Install iOS pods via `npx pod-install` |
 | `yarn test`        | Run Jest                               |
 | `yarn lint`        | Run ESLint                             |
+| `yarn rename-app`  | Interactive app rename (see below)     |
 
 ## What’s included
 
@@ -84,7 +85,27 @@ App.tsx           # Root: SafeAreaProvider, hydration, navigator
 
 ## Customizing this template
 
-1. **Rename the app** — Update `name` and `displayName` in `app.json` and the `name` field in `package.json` to match your product.
+1. **Rename the app** — After cloning, run:
+
+   ```sh
+   yarn rename-app
+   ```
+
+   The script prompts for three values:
+
+   - **App name** — Internal React Native module name (e.g. `MyCoolApp`). No spaces; used for native registration and iOS/Android project names.
+   - **Display name** — Label shown on the home screen (e.g. `My Cool App`). Can contain spaces.
+   - **Package name** — Reverse-domain identifier (e.g. `com.acme.mycoolapp`). Sets the Android `applicationId` and iOS bundle identifier.
+
+   Commit or branch before running if your working tree is not clean. After the script finishes:
+
+   ```sh
+   yarn install
+   yarn pod-install      # macOS only
+   cd android && ./gradlew clean && cd ..
+   ```
+
+   Optionally delete `ios/build` and `android/app/build` if they exist.
 2. **Navigation** — Add screens to `src/screens/`, export them from `src/screens/index.ts`, register routes in `Application.tsx`, and extend `ApplicationStackParamList` in `src/types/navigation.d.ts`.
 3. **Locales** — Add namespaces or languages under `src/translations/resources/` and register them in `src/translations/index.ts`.
 4. **Auth / gating** — The stack switches between `SignIn` and `Home` based on `useUserStore`’s `isLoggedIn`; replace or extend this flow as needed.
