@@ -12,7 +12,7 @@ import i18next from 'i18next';
 import { border, colors, fontSize, spacing } from '@/theme';
 import { Button, SafeAreaView } from '@/components';
 import { useUserStore } from '@/stores';
-import { usePostsQuery } from '@/services/post';
+import { usePostsQuery } from '@/services/posts';
 
 const Home = () => {
   const email = useUserStore(state => state.email);

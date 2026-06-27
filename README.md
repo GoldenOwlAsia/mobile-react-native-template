@@ -63,7 +63,7 @@ yarn ios
 - **i18next** / **react-i18next** — initialized in `src/translations/index.ts` with English and Vietnamese resources under `src/translations/resources/`.
 - **Theming** — tokens in `src/theme/` (colors, spacing, typography, borders).
 - **UI primitives** — `Button`, `Input`, `Text`, `SafeAreaView` under `src/components/` (with example tests).
-- **Data fetching** — TanStack React Query (`@tanstack/react-query`) with `src/services/queryClient.ts` (see `src/services/README.md`). `src/services/post.ts` + `Home` show a minimal `useQuery` flow. `App.tsx` wraps the tree in `QueryClientProvider` and ties query focus to `AppState` on native.
+- **Data fetching** — TanStack React Query (`@tanstack/react-query`) with `src/services/queryClient.ts`. `src/services/posts/` + `Home` show a minimal `useQuery` flow (`keys`, `api`, `queries`). `App.tsx` wraps the tree in `QueryClientProvider` and ties query focus to `AppState` on native.
 
 Native gesture handling is set up via `gesture-handler.js` / `gesture-handler.native.js` and imported from `App.tsx`.
 
@@ -109,7 +109,7 @@ App.tsx           # Root: SafeAreaProvider, hydration, navigator
 2. **Navigation** — Add screens to `src/screens/`, export them from `src/screens/index.ts`, register routes in `Application.tsx`, and extend `ApplicationStackParamList` in `src/types/navigation.d.ts`.
 3. **Locales** — Add namespaces or languages under `src/translations/resources/` and register them in `src/translations/index.ts`.
 4. **Auth / gating** — The stack switches between `SignIn` and `Home` based on `useUserStore`’s `isLoggedIn`; replace or extend this flow as needed.
-5. **APIs with React Query** — Read `src/services/README.md` and follow `src/screens/Home/useDemoPostsQuery.ts` (used on the Home screen): query keys, `fetch` in the query function, `useQuery` in a small hook. Copy that shape per resource; add `useMutation` where you write data.
+5. **APIs with React Query** — Follow `src/services/posts/`: query keys in `keys.ts`, fetchers in `api.ts`, hooks in `queries.ts` (and `mutations.ts` when you write data). Copy that folder per domain; import from `@/services/<domain>`.
 
 ## Testing and quality
 

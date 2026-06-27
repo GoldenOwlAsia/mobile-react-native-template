@@ -1,0 +1,71 @@
+---
+name: services-and-state
+description: React Query services and Zustand store conventions
+globs: src/services/**/*,src/stores/**/*
+alwaysApply: false
+---
+
+# Services and state
+
+## React Query (`src/services/`)
+
+Server/async data goes here — not in Zustand, not inline in screens.
+
+Each API domain gets a folder under `src/services/` (e.g. `posts/`, `users/`). Follow the layout in `src/services/posts/`:
+
+```text
+src/services/posts/
+  keys.ts       # query-key factory for this domain
+  types.ts      # request/response types
+  api.ts        # async fetchers (throw on non-OK responses)
+  queries.ts    # useXxxQuery hooks
+  mutations.ts  # useXxxMutation hooks (add when you write data)
+  index.ts      # public barrel — screens import from here only
+```
+
+1. **`keys.ts`** — one factory per domain; extend with `list(filters)`, `detail(id)`, `search(q)`, etc. as the feature grows.
+2. **`api.ts`** — raw `fetch` (or a shared client); no React Query imports.
+3. **`queries.ts` / `mutations.ts`** — thin hooks; mutations invalidate related keys from `keys.ts`.
+4. **`index.ts`** — re-export hooks, keys (for invalidation), and types. Do not import internal files from screens.
+
+```typescript
+// keys.ts
+export const postKeys = {
+  all: ['posts'] as const,
+  lists: () => [...postKeys.all, 'list'] as const,
+  list: () => [...postKeys.lists()] as const,
+};
+
+// queries.ts
+export function usePostsQuery() {
+  return useQuery({
+    queryKey: postKeys.list(),
+    queryFn: fetchPosts,
+  });
+}
+
+// Screen
+import { usePostsQuery } from '@/services/posts';
+```
+
+When a domain folder outgrows ~150 lines in `queries.ts` or `mutations.ts`, split by concern (e.g. `queries.search.ts`, `mutations.social.ts`) — still under the same domain folder.
+
+Use `import { API_URL } from '@env'` for real endpoints. Share the app-wide client from `src/services/queryClient.ts`.
+
+## Zustand (`src/stores/`)
+
+Client/global state: auth session, UI prefs, offline flags.
+
+- Persist with `persist` + `createJSONStorage(() => mmkvStorage)`.
+- Use `partialize` to persist only serializable fields — never actions.
+- Export store hooks from `src/stores/index.ts`.
+
+```typescript
+// ❌ BAD — persisting actions
+partialize: state => state,
+
+// ✅ GOOD
+partialize: state => ({ isLoggedIn: state.isLoggedIn, email: state.email }),
+```
+
+`App.tsx` waits for store hydration before rendering — new persisted stores must not block the tree without the same gate.

@@ -1,0 +1,47 @@
+---
+name: screens
+description: Screen conventions — layout, imports, and navigation registration
+globs: src/screens/**/*
+alwaysApply: false
+---
+
+# Screens
+
+## Folder layout
+
+Screens live under `src/screens/`. Use a folder with `index.tsx` as the entry:
+
+```
+src/screens/Settings/index.tsx
+src/screens/Authentication/SignIn/index.tsx
+```
+
+Export every screen from `src/screens/index.ts`:
+
+```typescript
+export { default as Settings } from './Settings';
+```
+
+## Screen structure
+
+- Default-export the screen component.
+- Wrap content in `SafeAreaView` from `@/components`.
+- Use `@/theme` tokens for styles; use `useTranslation` for user-facing strings.
+- Select Zustand state with narrow selectors: `useUserStore(state => state.email)`.
+
+## Adding a new screen
+
+1. Create the screen under `src/screens/`.
+2. Export it from `src/screens/index.ts`.
+3. Register the route in `src/navigators/Application.tsx`.
+4. Add params to `ApplicationStackParamList` in `src/types/navigation.d.ts`.
+
+```typescript
+// src/types/navigation.d.ts
+export type ApplicationStackParamList = {
+  Home: undefined;
+  Settings: undefined;
+};
+```
+
+Data fetching belongs in `@/services` hooks — screens call hooks, not raw `fetch`.

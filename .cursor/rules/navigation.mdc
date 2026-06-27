@@ -1,0 +1,59 @@
+---
+name: navigation
+description: React Navigation conventions — typed routes, auth gating, stack registration
+globs: src/navigators/**/*,src/types/navigation.d.ts
+alwaysApply: false
+---
+
+# Navigation
+
+Navigators live in `src/navigators/`. The root stack is `Application.tsx`; route param types live in `src/types/navigation.d.ts`.
+
+## Typed routes
+
+Every `Stack.Screen` `name` must exist on `ApplicationStackParamList`. Screens with no params use `undefined`; screens with params define an object type.
+
+```typescript
+// src/types/navigation.d.ts
+export type ApplicationStackParamList = {
+  Home: undefined;
+  SignIn: undefined;
+  Profile: { userId: string };
+};
+```
+
+Import the param list in navigators: `createStackNavigator<ApplicationStackParamList>()`.
+
+## Registering a screen
+
+When adding a route, update **both** files:
+
+1. `ApplicationStackParamList` in `src/types/navigation.d.ts`
+2. `<Stack.Screen name="..." component={...} />` in the navigator
+
+Import screen components from `@/screens`, not from deep paths.
+
+## Auth gating
+
+The root navigator switches stacks based on `useUserStore(state => state.isLoggedIn)`. Keep auth screens in the logged-out group and app screens in the logged-in group:
+
+```typescript
+{isLoggedIn ? (
+  <Stack.Group>
+    <Stack.Screen name="Home" component={Home} />
+  </Stack.Group>
+) : (
+  <Stack.Group>
+    <Stack.Screen name="SignIn" component={SignIn} />
+  </Stack.Group>
+)}
+```
+
+Do not put auth logic inside individual screens — gate at the navigator level.
+
+## Extending navigation
+
+- **New authenticated screen** — add to the logged-in `Stack.Group`.
+- **New auth screen** — add to the logged-out `Stack.Group`.
+- **Tabs** — nest a tab navigator as a single stack screen inside the logged-in group; do not replace the root `NavigationContainer`.
+- **Modal flows** — use a nested stack or `presentation: 'modal'` on a group; keep `ApplicationStackParamList` as the single source of route names.
