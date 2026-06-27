@@ -1,0 +1,66 @@
+---
+name: i18n
+description: i18next conventions — locales, namespaces, typed keys, useTranslation
+globs: src/translations/**/*,src/types/i18next.d.ts
+alwaysApply: false
+---
+
+# i18n
+
+User-facing copy lives in `src/translations/`. Initialized in `src/translations/index.ts` and imported from `App.tsx`.
+
+## File layout
+
+```
+src/translations/
+  index.ts
+  resources/
+    en/
+      index.ts          # re-exports namespaces
+      example.json
+    vi/
+      index.ts
+      example.json
+```
+
+Each namespace is a JSON file. Re-export it from the locale's `index.ts`:
+
+```typescript
+export { default as example } from './example.json';
+```
+
+## Adding a namespace
+
+1. Add `{namespace}.json` under **every** locale folder (`en/`, `vi/`, …).
+2. Export it from each locale's `index.ts`.
+3. Keys are inferred automatically — `src/types/i18next.d.ts` uses `en` as the type source.
+
+Keep keys identical across locales; only values differ.
+
+## Adding a locale
+
+1. Create `src/translations/resources/{code}/` mirroring `en/` (same namespaces, translated values).
+2. Add `import * as {code} from './resources/{code}'` in `src/translations/index.ts`.
+3. Register under `resources: { en, vi, {code} }`.
+
+Namespaces are derived from `Object.keys(en)` — new locales must export the same namespace names as `en`.
+
+## Using strings in UI
+
+Never hardcode user-facing text in JSX. Use `useTranslation`:
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+const { t } = useTranslation(['example']);
+
+<Text>{t('helloUser', { name: email })}</Text>
+```
+
+Pass the namespace array matching the JSON file name. Switch languages via `i18next.changeLanguage(code)`.
+
+## Rules
+
+- `fallbackLng` is `'en'` — add English keys first.
+- Use `compatibilityJSON: 'v4'` (already configured); do not change without reason.
+- Do not edit generated types in `i18next.d.ts` beyond the existing `resources: typeof en` pattern.
