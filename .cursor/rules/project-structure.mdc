@@ -25,7 +25,7 @@ import { colors, spacing } from '@/theme';
 | `src/components/` | Reusable UI primitives |
 | `src/screens/` | Full-screen views |
 | `src/navigators/` | Navigation containers and stacks |
-| `src/services/` | API fetchers and React Query hooks |
+| `src/services/` | API domains (e.g. `posts/`) with fetchers and React Query hooks |
 | `src/stores/` | Zustand stores and MMKV persistence |
 | `src/theme/` | Design tokens (colors, spacing, typography, borders) |
 | `src/translations/` | i18next setup and locale files |
@@ -39,5 +39,6 @@ Re-export public APIs from each folder's `index.ts`. Import from the barrel, not
 - `src/components/index.ts` — UI components
 - `src/screens/index.ts` — screen components
 - `src/stores/index.ts` — store hooks
+- `src/services/<domain>/index.ts` — React Query hooks and keys per API domain
 
 Root app wiring stays at the repo root: `App.tsx`, `index.js`, native `ios/` and `android/`.
