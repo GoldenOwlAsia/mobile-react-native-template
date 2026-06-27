@@ -1,0 +1,43 @@
+---
+name: project-structure
+description: Golden Owl RN template — folder layout, path alias, and barrel exports
+alwaysApply: true
+---
+
+# Project structure
+
+Application code lives under `src/`. Use the `@/` path alias (`@/` → `src/`) for all internal imports — never deep relative paths like `../../`.
+
+```typescript
+// ❌ BAD
+import { Button } from '../../components/Button/Button';
+
+// ✅ GOOD
+import { Button } from '@/components';
+import { useUserStore } from '@/stores';
+import { colors, spacing } from '@/theme';
+```
+
+## Folder responsibilities
+
+| Folder | Purpose |
+|--------|---------|
+| `src/components/` | Reusable UI primitives |
+| `src/screens/` | Full-screen views |
+| `src/navigators/` | Navigation containers and stacks |
+| `src/services/` | API fetchers and React Query hooks |
+| `src/stores/` | Zustand stores and MMKV persistence |
+| `src/theme/` | Design tokens (colors, spacing, typography, borders) |
+| `src/translations/` | i18next setup and locale files |
+| `src/types/` | Shared TypeScript types (navigation, i18n) |
+| `src/utils/` | Helpers and test utilities |
+
+## Barrel exports
+
+Re-export public APIs from each folder's `index.ts`. Import from the barrel, not from internal file paths.
+
+- `src/components/index.ts` — UI components
+- `src/screens/index.ts` — screen components
+- `src/stores/index.ts` — store hooks
+
+Root app wiring stays at the repo root: `App.tsx`, `index.js`, native `ios/` and `android/`.

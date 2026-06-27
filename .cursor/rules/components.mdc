@@ -1,0 +1,52 @@
+---
+name: components
+description: UI component conventions — folder layout, theme usage, tests
+globs: src/components/**/*
+alwaysApply: false
+---
+
+# Components
+
+## Folder layout
+
+One folder per component, named in PascalCase:
+
+```
+src/components/Button/Button.tsx
+src/components/Button/Button.test.tsx
+```
+
+Export from `src/components/index.ts`:
+
+```typescript
+export { default as Button } from './Button/Button';
+```
+
+## Implementation
+
+- Default-export the component; wrap with `memo()` when props are stable.
+- Import theme tokens from `@/theme` — no hardcoded colors, spacing, or font sizes.
+- Use the shared `Text` component instead of React Native's `Text` for typography.
+- Set a `testID` prop with a sensible default (e.g. `button-view`, `button-text`).
+
+```typescript
+// ❌ BAD
+padding: 12,
+backgroundColor: '#3366FF',
+
+// ✅ GOOD
+import { colors, spacing, border, text } from '@/theme';
+
+padding: spacing.xs,
+backgroundColor: colors.palette.primary400,
+borderRadius: border.radius,
+```
+
+## Tests
+
+Co-locate `ComponentName.test.tsx`. Render via `@/utils/test` and query by `testID`.
+
+```typescript
+import { fireEvent, render } from '@/utils/test';
+import Button from './Button';
+```

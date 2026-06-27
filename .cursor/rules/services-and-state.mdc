@@ -1,0 +1,52 @@
+---
+name: services-and-state
+description: React Query services and Zustand store conventions
+globs: src/services/**/*,src/stores/**/*
+alwaysApply: false
+---
+
+# Services and state
+
+## React Query (`src/services/`)
+
+Server/async data goes here — not in Zustand, not inline in screens.
+
+Follow the pattern in `src/services/post.ts`:
+
+1. Define a query-key factory (`resourceKeys.all`, `resourceKeys.list()`).
+2. Write an async fetcher that throws on non-OK responses.
+3. Export a `useXxxQuery` (or `useXxxMutation`) hook.
+
+```typescript
+const postsKeys = {
+  all: ['posts'] as const,
+  list: () => [...postsKeys.all, 'list'] as const,
+};
+
+export function usePostsQuery() {
+  return useQuery({
+    queryKey: postsKeys.list(),
+    queryFn: fetchPosts,
+  });
+}
+```
+
+Use `import { API_URL } from '@env'` for real endpoints. Share the app-wide client from `src/services/queryClient.ts`.
+
+## Zustand (`src/stores/`)
+
+Client/global state: auth session, UI prefs, offline flags.
+
+- Persist with `persist` + `createJSONStorage(() => mmkvStorage)`.
+- Use `partialize` to persist only serializable fields — never actions.
+- Export store hooks from `src/stores/index.ts`.
+
+```typescript
+// ❌ BAD — persisting actions
+partialize: state => state,
+
+// ✅ GOOD
+partialize: state => ({ isLoggedIn: state.isLoggedIn, email: state.email }),
+```
+
+`App.tsx` waits for store hydration before rendering — new persisted stores must not block the tree without the same gate.

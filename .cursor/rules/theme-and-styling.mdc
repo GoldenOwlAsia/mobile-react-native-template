@@ -1,0 +1,38 @@
+---
+name: theme-and-styling
+description: Theme tokens and StyleSheet conventions for UI files
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# Theme and styling
+
+All visual values come from `@/theme`:
+
+```typescript
+import { border, colors, fontSize, spacing, text } from '@/theme';
+```
+
+Available tokens: `colors`, `spacing`, `fontSize` / `text.fontSize`, `border.radius`.
+
+## StyleSheet rules
+
+- Define styles with `StyleSheet.create` at the bottom of the file.
+- Spread typography tokens: `...fontSize.md`, `...text.fontSize.md`.
+- Use semantic colors: `colors.text`, `colors.palette.primary400`, `colors.palette.neutral200`.
+
+```typescript
+// ❌ BAD
+fontSize: 16,
+color: '#333',
+marginBottom: 8,
+
+// ✅ GOOD
+...fontSize.md,
+color: colors.text,
+marginBottom: spacing.xs,
+```
+
+Do not add one-off hex values or magic numbers. If a token is missing, add it under `src/theme/` first, then use it.
+
+Screens and components share the same token set — never fork ad-hoc palettes inside a feature.
