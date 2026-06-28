@@ -4,7 +4,7 @@ PODS:
     - hermes-engine/Pre-built (= 250829098.0.14)
   - hermes-engine/Pre-built (250829098.0.14)
   - MMKVCore (2.4.0)
-  - NitroMmkv (4.3.1):
+  - NitroMmkv (4.3.2):
     - hermes-engine
     - MMKVCore (= 2.4.0)
     - NitroModules
@@ -29,7 +29,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - NitroModules (0.35.9):
+  - NitroModules (0.35.10):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1963,7 +1963,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNGestureHandler (3.0.1):
+  - RNGestureHandler (3.0.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2291,8 +2291,8 @@ SPEC CHECKSUMS:
   FBLazyVector: b3e7ad108f0d882e30445c5527d774e3fd432f3d
   hermes-engine: c415f244c4c217fa9173deac40e9c1b9c392f0eb
   MMKVCore: 3d16ce9f7d411e135020915fde98a056859a1efa
-  NitroMmkv: 4b4f95387a15161b346a6a93b9c7072c179e0e88
-  NitroModules: 16bc17a076b12304d608f7c915b9d321f56dfc19
+  NitroMmkv: 85a251e15c39d7c95fe58cf40786fa126b8d143c
+  NitroModules: 994eaa7fc39d1fb4b76bb61054312c9796c4a649
   RCTDeprecation: 2a74a2c57675e64419bd89078efde81f7c1de90b
   RCTRequired: 30451112e6fef4e6f31b4e7eee0845156e35e4b0
   RCTSwiftUI: 5aaf0b07e747ba749dc6acc94d8bd41eea4b570f
@@ -2367,10 +2367,10 @@ SPEC CHECKSUMS:
   ReactCommon: d5c1bb4427bf51c443de5926aac332c89ddd9363
   ReactNativeDependencies: fa0a54b3f5319ae0e3b9aff32bfee7a424b88e66
   RNCMaskedView: eb2b2e538afa907f05a5848a1a1ac26092e6fec9
-  RNGestureHandler: 1fac5cb6e78ca6836f4c0b9beba31b10490c70ce
+  RNGestureHandler: 953af68599a35f425ea962dda2ee15ee4e3ca719
   RNScreens: 991cc417cd396602a6cf59a42139e5a9d91462a9
   Yoga: fe50ab299e578f397fef753cf309c6703a4db29b
 
 PODFILE CHECKSUM: 92d2a5a4c8102fdaed38b83caf56229e3802baf9
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2
