@@ -9,7 +9,7 @@ import { useUserStore } from '@/stores';
 import './gesture-handler';
 import './src/translations';
 
-function App(): React.ReactElement | null {
+const App = (): React.ReactElement | null => {
   const [hydrated, setHydrated] = useState(() =>
     useUserStore.persist.hasHydrated(),
   );
@@ -33,6 +33,6 @@ function App(): React.ReactElement | null {
       </SafeAreaProvider>
     </QueryClientProvider>
   );
-}
+};
 
 export default App;
