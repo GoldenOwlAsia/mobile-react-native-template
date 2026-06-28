@@ -10,8 +10,10 @@
   },
   "include": [
     "./src/**/*",
+    "App.tsx",
+    "__tests__/**/*",
     "index.d.ts",
-    ".eslintrc.js",
+    "eslint.config.js",
     "jest.setup.js",
     "jest.config.js",
     "babel.config.js",

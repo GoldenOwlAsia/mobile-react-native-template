@@ -1,5 +1,4 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
-
 import { API_URL } from '@env';
 
 type AccessTokenGetter = () => string | null | undefined;
